@@ -30,6 +30,15 @@ final class VendorsListVC: UIViewController {
             }
         }
     }
+    
+    private func openDetails(data: VendorData) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "VendorDetailsVC") as? VendorDetailsVC
+        vc?.imageData = data
+        vc?.modalPresentationStyle = .fullScreen
+        vc?.modalTransitionStyle = .crossDissolve
+        self.present(vc!, animated: true)
+    }
 }
 
 extension VendorsListVC: UITableViewDataSource {
@@ -44,7 +53,11 @@ extension VendorsListVC: UITableViewDataSource {
         let imageObjectData = vendorsVM.vendors.value[safe: indexPath.row]
         
         if let imageObjectData = imageObjectData {
-            cell?.setData(with: imageObjectData, vc: self)
+            cell?.setData(with: imageObjectData)
+        }
+        
+        cell?.openDetails = { [weak self] data in
+            self?.openDetails(data: data)
         }
         
         return UITableViewCell()
